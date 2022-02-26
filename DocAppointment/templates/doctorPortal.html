@@ -78,6 +78,31 @@
             <li class="doctor-portal"><a href="/DoctorPortal"> Doctor Portal </a></li>
         </ul>
     </header>
-    <h1> You are Home </h1>
+    <h1> Doctor Portal </h1>
+    <div class="split left">
+        <div class="centered">
+            <form class="login-wrapper" method="post">
+                {% csrf_token %}
+                <h1>Login</h1>
+                <input style="display: inline-block" type="text" name="username" id ="user" placeholder="UserName">
+                <input style="display: inline-block" type="text" name="password" id ="password" placeholder="Password">
+                <br/><br/>
+                <input type="submit" name="" value="login">
+            </form>
+        </div>
+    </div>
+    <div class="split right">
+        <div class="centered">
+            <form class="login-wrapper" method="post">
+                {% csrf_token %}
+                <h1>Register</h1>
+                <input style="display: inline-block" type="text" name="username" id ="user" placeholder="UserName">
+                <input style="display: inline-block" type="text" name="password" id ="password" placeholder="Password">
+                <input style="display: inline-block" type="text" name="password" id ="password" placeholder="Confirm Password">
+                <br/><br/>
+                <input type="submit" name="" value="register">
+            </form>
+        </div>
+    </div>
 </body>
 </html>
