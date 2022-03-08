@@ -1,32 +1,46 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as login_user
+from django.contrib.auth import authenticate, login
 from .models import Patient, Doctor
+from .forms import CreateUserForm, CreatePatientForm
 
 
 def home(request):
     return render(request, 'home.html', {})
 
 def patientPortal(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password_su = request.POST.get('password_su')
-        con_password = request.POST['con_password']
-        doctor = request.POST['doctor']
-        # user validation
-        if Patient.object.filter(username=username):
-            messages.error(request, "username already exist! please try some other user name")
-            return redirect('home')
-        if len(username) > 16:
-            messages.error(request, "username must be under 16 charcters")
-            return redirect('home')
-        if con_password != password_su:
-            messages.error(request, "passwords didn't match!")
-        newPatient = Patient.object.create_user(username, password_su)
-        newPatient.save()
-        messages.success(request, "your account has been  successfully created")
-        return redirect("home")
-    return render(request, 'patientPortal.html', {})
+    userForm = CreateUserForm()
+    patientForm = CreatePatientForm()
+    if request.method == "POST":
+        userForm = CreateUserForm(request.POST)
+        patientForm = CreatePatientForm(request.POST)
+        if request.POST.get('submit') == 'login':
+            username = request.POST['username']
+            password = request.POST['password']
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return render(request, "home.html")
+            else:
+                messages.error(request, 'This Username Or Password does not exist')
+                return redirect('patientPortal')
+        elif request.POST.get('submit') == 'register':
+            if userForm.is_valid() and patientForm.is_valid():
+                userForm.save()
+                patient = patientForm.save(commit=False)
+                username = userForm.cleaned_data['username']
+                password = userForm.cleaned_data['password1']
+                user = authenticate(username=username, password=password)
+                patient.user = user
+                patient.save()
+                messages.success(request, "Registration successful!")
+                return redirect('patientPortal')
+
+    return render(request, 'patientPortal.html', {'user_form': userForm, 'patient_form': patientForm})
+
 
 def doctorPortal(request):
     return render(request, 'doctorPortal.html', {})

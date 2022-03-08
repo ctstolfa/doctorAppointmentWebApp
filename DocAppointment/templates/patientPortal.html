@@ -40,7 +40,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
+            text-align: left;
         }
 
         .nav-wrapper{
@@ -87,7 +87,7 @@
                 <input style="display: inline-block" type="text" name="username" id ="patient" placeholder="UserName">
                 <input style="display: inline-block" type="text" name="password" id ="password" placeholder="Password">
                 <br/><br/>
-                <input type="submit" name="" value="login">
+                <input type="submit" name="submit" value="login">
             </form>
         </div>
     </div>
@@ -96,12 +96,16 @@
             <form class="login-wrapper" method="post">
                 {% csrf_token %}
                 <h1>Register</h1>
-                <input style="display: inline-block" type="text" name="username" id ="patient_su" placeholder="UserName">
-                <input style="display: inline-block" type="text" name="password" id ="password_su" placeholder="Password">
-                <input style="display: inline-block" type="text" name="con_password" id ="con_password" placeholder="Confirm Password">
-                <input style="display: inline-block" type="text" name="doctor" id ="doctor" placeholder="Your Doctor's Name">
+                {% if form.errors %}
+                <br><h2>There was an error in your form!</h2><br>
+                {% endif %}
+                {{ user_form }}
+                <br/>
+                {{ patient_form }}
                 <br/><br/>
-                <input type="submit" name="" value="register">
+                <input type="submit" name="submit" value="register">
+                <br/><br/>
+
             </form>
         </div>
     </div>

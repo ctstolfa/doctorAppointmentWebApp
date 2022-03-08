@@ -1,14 +1,17 @@
+from django.contrib.auth.models import User
 from django.db import models
+
 
 # Create your models here.
 
 class Patient(models.Model):
-    username = models.CharField(max_length=30)
-    password = models.CharField(max_length=100)
-    # doctor?
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    doctor = models.CharField(max_length=100, default="")
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Doctor(models.Model):
-    username = models.CharField(max_length=30)
-    password = models.CharField(max_length=100)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     # list of patients?
