@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>home</title>
+    <title>doctor portal</title>
     <style>
         body {
             background-color: white;
@@ -40,7 +40,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
+            text-align: left;
         }
 
         .nav-wrapper{
@@ -78,16 +78,16 @@
             <li class="doctor-portal"><a href="/DoctorPortal"> Doctor Portal </a></li>
         </ul>
     </header>
-    <h1> Doctor Portal </h1>
+    <h1> Patient Portal </h1>
     <div class="split left">
         <div class="centered">
             <form class="login-wrapper" method="post">
                 {% csrf_token %}
                 <h1>Login</h1>
-                <input style="display: inline-block" type="text" name="username" id ="doctor" placeholder="UserName">
-                <input style="display: inline-block" type="text" name="password" id ="password" placeholder="Password">
+                <input style="display: inline-block" type="text" name="username" id ="patient" placeholder="UserName">
+                <input style="display: inline-block" type="password" name="password" id ="password" placeholder="Password">
                 <br/><br/>
-                <input type="submit" name="" value="login">
+                <input type="submit" name="submit" value="login">
             </form>
         </div>
     </div>
@@ -96,11 +96,16 @@
             <form class="login-wrapper" method="post">
                 {% csrf_token %}
                 <h1>Register</h1>
-                <input style="display: inline-block" type="text" name="username" id ="doctor_su" placeholder="UserName">
-                <input style="display: inline-block" type="text" name="password" id ="password_su" placeholder="Password">
-                <input style="display: inline-block" type="text" name="password" id ="con_password" placeholder="Confirm Password">
+                {% if form.errors %}
+                <br><h2>There was an error in your form!</h2><br>
+                {% endif %}
+                {{ user_form }}
+                <br/>
+                {{ doctor_form }}
                 <br/><br/>
-                <input type="submit" name="" value="register">
+                <input type="submit" name="submit" value="register">
+                <br/><br/>
+
             </form>
         </div>
     </div>
