@@ -1,4 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -75,4 +77,20 @@ def doctorPortal(request):
 
     return render(request, 'doctorPortal.html', {'user_form': userForm, 'patient_form': doctorForm})
 
-# Create your views here.
+
+def doctorPage(request, username):
+    # If no such user exists raise 404
+    try:
+        user = User.objects.get(username=username)
+    except:
+        raise Http404
+
+    # Flag that determines if we should show editable elements in template
+    editable = False
+    # Handling non authenticated user for obvious reasons
+    if request.user.is_authenticated and request.user == user:
+        editable = True
+
+    context = locals()
+    template = 'doctorPage.html'
+    return render(request, template, context)
