@@ -21,3 +21,17 @@ class Patient(models.Model):
     def get_doc(self):
         return str(self.doctor)
 
+class Appointment(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT)
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    start_time = models.DateTimeField()
+
+
+    def get_patient(self):
+        return str(self.patient)
+    
+    def get_doctor(self):
+        return str(self.doctor)
+
+    
+
