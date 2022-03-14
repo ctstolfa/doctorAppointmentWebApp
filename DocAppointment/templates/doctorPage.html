@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Page</title>
+</head>
+<body>
+    <h1>Welcome Doctor {{ user.username }}</h1>
+    <h2>Your Current Patients Are ... </h2>
+    <ul>
+        {% for patient in patients %}
+        <li> {{ patient }} </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
