@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from datetime import timedelta
 
 
 # Create your models here.
@@ -24,7 +25,9 @@ class Patient(models.Model):
 class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.PROTECT)
     doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
-    start_time = models.DateTimeField()
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = start_time + timedelta(minutes = 30)
 
 
     def get_patient(self):
