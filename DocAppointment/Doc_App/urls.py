@@ -7,4 +7,6 @@ urlpatterns = [
     path('PatientPortal', views.patientPortal, name='patientPortal'),
     path('DoctorPortal', views.doctorPortal, name='doctorPortal'),
     path("doctorPage/<username>", views.doctorPage, name="doctorPage"),
+    path("patientMakeAppointment", views.patientMakeAppointment, name="patientMakeAppointment"),
+    path("patientPage/<username>", views.patientPage, name="patientPage"),
 ]

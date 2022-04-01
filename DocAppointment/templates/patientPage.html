@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Doctor Page</title>
+    <title>Patient Page</title>
+    
 </head>
 <body>
     <h1>Welcome Patient {{ user.username }}</h1>
     <h2>Appointments are not set up yet check back later </h2>
-
+    <form action="/patientMakeAppointment">
+    <input type="submit" value="Make an Appointment" />
+</form>
 </body>
 </html>

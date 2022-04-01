@@ -99,7 +99,7 @@ def doctorPage(request, username):
 
 
 
-def doctorPage(request, username):
+def patientPage(request, username):
     # If no such user exists raise 404
     try:
         user = User.objects.get(username=username)
@@ -113,5 +113,10 @@ def doctorPage(request, username):
         editable = True
 
     context = locals()
-    template = 'doctorPage.html'
+    template = 'patientPage.html'
     return render(request, template, context)
+
+
+def patientMakeAppointment(request):
+    template = 'patientMakeAppointment.html'
+    return render(request, template)
