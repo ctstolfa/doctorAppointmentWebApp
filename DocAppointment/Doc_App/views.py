@@ -1,3 +1,5 @@
+from datetime import datetime, date, timedelta
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import Http404
@@ -5,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Patient, Doctor
-from .forms import CreateUserForm, CreatePatientForm, CreateDoctorForm
+from .forms import CreateUserForm, CreatePatientForm, CreateDoctorForm, CreateAppointmentForm
 
 
 def home(request):
@@ -98,7 +100,6 @@ def doctorPage(request, username):
     return render(request, template, context)
 
 
-
 def patientPage(request, username):
     # If no such user exists raise 404
     try:
@@ -118,5 +119,17 @@ def patientPage(request, username):
 
 
 def patientMakeAppointment(request):
+    if request.method == "POST":
+        appointment_form = CreateAppointmentForm(request.POST)
+        if appointment_form.is_valid():
+            appointment = appointment_form.save(commit=False)
+            patient = Patient.objects.all().filter(user=request.user)
+            appointment.patient = patient[0]
+            appointment.doctor = patient[0].doctor
+            appointment.end_time = (datetime.combine(date.today(), appointment.start_time) + timedelta(minutes=30)).time()
+            appointment.save()
+    else:
+        appointment_form = CreateAppointmentForm()
     template = 'patientMakeAppointment.html'
-    return render(request, template)
+    context = {'appointment_form': appointment_form}
+    return render(request, template, context)

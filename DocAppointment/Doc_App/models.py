@@ -35,5 +35,6 @@ class Appointment(models.Model):
     def get_doctor(self):
         return str(self.doctor)
 
-    
-
+    def __str__(self):
+        return 'Appointment: ' + str(self.doctor) + ', ' + str(self.patient) \
+               + ', ' + str(self.date) + ', ' + str(self.start_time)

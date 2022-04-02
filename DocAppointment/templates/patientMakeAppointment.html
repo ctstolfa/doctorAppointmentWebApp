@@ -5,8 +5,14 @@
     <title>Appointment Creation Page</title>
 </head>
 <body>
-    <h1>Create an Appointment with {{user.doc}} </h1>
-    <h2>Appointments are not set up yet check back later </h2>
-
+    <form class="appointment-wrapper" method="post">
+        {% csrf_token %}
+        <h1>Create an Appointment with {{user.doc}} </h1>
+        {% if form.errors %}
+        <br><h2>There was an error in your form!</h2><br>
+        {% endif %}
+        {{ appointment_form }}
+        <input type="submit" name="submit" value="create appointment">
+    </form>
 </body>
 </html>
