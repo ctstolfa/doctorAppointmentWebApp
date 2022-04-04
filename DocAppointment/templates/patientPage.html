@@ -7,9 +7,10 @@
 </head>
 <body>
     <h1>Welcome Patient {{ user.username }}</h1>
-    <h2>Appointments are not set up yet check back later </h2>
     <form action="/patientMakeAppointment">
     <input type="submit" value="Make an Appointment" />
+    <form action="/patientViewAppointment">
+    <input type="submit" value="View Appointments" />
 </form>
 </body>
 </html>

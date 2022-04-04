@@ -1,4 +1,5 @@
 from datetime import datetime, date, timedelta
+#from readline import append_history_file
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -6,7 +7,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .models import Patient, Doctor
+from .models import Appointment, Patient, Doctor
 from .forms import CreateUserForm, CreatePatientForm, CreateDoctorForm, CreateAppointmentForm
 
 
@@ -133,3 +134,11 @@ def patientMakeAppointment(request):
     template = 'patientMakeAppointment.html'
     context = {'appointment_form': appointment_form}
     return render(request, template, context)
+
+def patientViewAppointment(request):
+    patientAppointments = Appointment.objects.filter(patient = User.username)
+    context = locals()
+    template = 'patientViewAppointment.html'
+    return render(request, template, context)
+
+
