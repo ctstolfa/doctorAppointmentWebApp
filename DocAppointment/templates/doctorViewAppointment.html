@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment View Page</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+        {% for app in doctorAppointments %}
+        <tr>
+        <td>{{app.doctor}}</td>
+        <td>{{app.patient}}</td>
+        <td>{{app.date}}</td>
+        <td>{{app.start_time}}</td>
+        <td>{{app.end_time}}</td>
+        </tr>
+    {%endfor%}
+    </table>
+</body>
+</html>

@@ -6,10 +6,19 @@
     
 </head>
 <body>
+    <header class="nav-wrapper">
+        <ul>
+           <li class="logout"><a href="/"> Logout  </a></li>
+           <li class="patient-portal"><a href="/patientMakeAppointment"> Make an Appointment </a></li>
+           <li class="doctor-portal"><a href="/patientViewAppointment"> View My Appointments </a></li>
+       </ul>
+   </header>
     <h1>Welcome Patient {{ user.username }}</h1>
-    <h2>Appointments are not set up yet check back later </h2>
     <form action="/patientMakeAppointment">
     <input type="submit" value="Make an Appointment" />
+    <form action="/patientViewAppointment">
+    <input type="submit" value="View Appointments" />
+</form>
 </form>
 </body>
 </html>
