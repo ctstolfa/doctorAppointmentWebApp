@@ -29,7 +29,7 @@ def patientPortal(request):
 
         if user is not None:
             login(request, user)
-            patient = Patient.objects.filter(user=user)
+            patient = Patient.objects.all().filter(user=user)
             if len(patient) == 0:
                 messages.error(request, 'You are not a Patient')
                 print('test')
@@ -128,20 +128,30 @@ def patientPage(request, username):
 
 
 def patientMakeAppointment(request):
+    appointment_form = CreateAppointmentForm()
     if request.method == "POST":
         appointment_form = CreateAppointmentForm(request.POST)
         if appointment_form.is_valid():
             appointment = appointment_form.save(commit=False)
-            patient = Patient.objects.all().filter(user=request.user)
-            appointment.patient = patient[0]
-            appointment.doctor = patient[0].doctor
-            appointment.end_time = (datetime.combine(date.today(), appointment.start_time) + timedelta(minutes=30)).time()
-            appointment.save()
-    else:
-        appointment_form = CreateAppointmentForm()
+            time = appointment.start_time
+            app_date = appointment.date
+            patient = Patient.objects.get(user=request.user)
+            test = Appointment.objects.all().filter(date=app_date, start_time=time, doctor=patient.doctor)
+            if len(test) == 1:
+                appointment.patient = patient
+                appointment.doctor = patient.doctor
+                appointment.end_time = (datetime.combine(date.today(),
+                                                         appointment.start_time) + timedelta(minutes=30)).time()
+                appointment.save()
+            else:
+                messages.error(request, 'This time is not available')
+                appointment_form = CreateAppointmentForm()
+                return render(request, 'patientMakeAppointment.html', {'appointment_form': appointment_form})
+
     template = 'patientMakeAppointment.html'
     context = {'appointment_form': appointment_form}
     return render(request, template, context)
+
 
 def patientViewAppointment(request):
     current_patient = Patient.objects.get(user = request.user)
@@ -149,6 +159,7 @@ def patientViewAppointment(request):
     context = locals()
     template = 'patientViewAppointment.html'
     return render(request, template, context)
+
 
 def doctorViewAppointment(request):
     current_doctor = Doctor.objects.get(user = request.user)
