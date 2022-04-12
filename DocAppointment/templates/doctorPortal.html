@@ -70,6 +70,11 @@
     </style>
 </head>
 <body>
+    {% for message in messages %}
+    <script>
+        alert('{{ message }}')
+    </script>
+    {% endfor %}
     <header class="nav-wrapper">
          <ul>
             <li>Welcome to DASS would you like to make an appointment?</li>

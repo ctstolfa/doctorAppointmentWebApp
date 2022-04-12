@@ -29,6 +29,11 @@ def patientPortal(request):
 
         if user is not None:
             login(request, user)
+            patient = Patient.objects.filter(user=user)
+            if len(patient) == 0:
+                messages.error(request, 'You are not a Patient')
+                print('test')
+                return redirect('patientPortal')
             return render(request, 'patientPage.html', {'user': user})
         else:
             messages.error(request, 'This Username Or Password does not exist')
@@ -62,7 +67,10 @@ def doctorPortal(request):
 
         if user is not None:
             login(request, user)
-            doctor = Doctor.objects.all().filter(user=user)
+            doctor = Doctor.objects.filter(user=user)
+            if len(doctor) == 0:
+                messages.error(request, 'You are not a Doctor')
+                return redirect('doctorPortal')
             patients = Patient.objects.all().filter(doctor=doctor[0])
             return render(request, 'doctorPage.html', {'user': user, 'patients': patients})
         else:
