@@ -136,15 +136,15 @@ def patientMakeAppointment(request):
             time = appointment.start_time
             app_date = appointment.date
             patient = Patient.objects.get(user=request.user)
-            test = Appointment.objects.all().filter(date=app_date, start_time=time, doctor=patient.doctor)
-            if len(test) == 1:
+            test = Appointment.objects.all().filter(date=app_date).filter(start_time=time).filter(doctor=patient.doctor)
+            if len(test) == 0:
                 appointment.patient = patient
                 appointment.doctor = patient.doctor
                 appointment.end_time = (datetime.combine(date.today(),
                                                          appointment.start_time) + timedelta(minutes=30)).time()
                 appointment.save()
             else:
-                messages.error(request, 'This time is not available')
+                messages.error(request, 'This appointment is not available')
                 appointment_form = CreateAppointmentForm()
                 return render(request, 'patientMakeAppointment.html', {'appointment_form': appointment_form})
 

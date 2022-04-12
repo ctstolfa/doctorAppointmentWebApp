@@ -34,19 +34,23 @@ class TimeInput(forms.TimeInput):
 	js = 'interval : 30'
 
 
-HOUR_CHOICES = []
 
-for x in range(0, 24):
-	HOUR_CHOICES.append((datetime.time(hour=x),
-						time.strftime("%I:%M %p", time.strptime('{:02d}:00'.format(x), "%H:%M"))))
-	HOUR_CHOICES.append((datetime.time(hour=x, minute=30),
-						time.strftime("%I:%M %p", time.strptime('{:02d}:30'.format(x), "%H:%M"))))
+
 
 
 class CreateAppointmentForm(forms.ModelForm):
+
 	date = forms.DateField(widget=DateInput)
 
 	class Meta:
+		HOUR_CHOICES = []
+
+		for x in range(0, 24):
+			HOUR_CHOICES.append((datetime.time(hour=x),
+								 time.strftime("%I:%M %p", time.strptime('{:02d}:00'.format(x), "%H:%M"))))
+			HOUR_CHOICES.append((datetime.time(hour=x, minute=30),
+								 time.strftime("%I:%M %p", time.strptime('{:02d}:30'.format(x), "%H:%M"))))
+
 		model = Appointment
 		fields = ('date', 'start_time')
 		widgets = {'start_time': forms.Select(choices=HOUR_CHOICES)}
