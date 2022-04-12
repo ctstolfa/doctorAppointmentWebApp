@@ -136,9 +136,17 @@ def patientMakeAppointment(request):
     return render(request, template, context)
 
 def patientViewAppointment(request):
-    patientAppointments = Appointment.objects.filter(patient = User.username)
+    current_patient = Patient.objects.get(user = request.user)
+    patientAppointments = Appointment.objects.filter(patient = current_patient)
     context = locals()
     template = 'patientViewAppointment.html'
+    return render(request, template, context)
+
+def doctorViewAppointment(request):
+    current_doctor = Doctor.objects.get(user = request.user)
+    doctorAppointments = Appointment.objects.filter(doctor = current_doctor)
+    context = locals()
+    template = 'doctorViewAppointment.html'
     return render(request, template, context)
 
 

@@ -9,6 +9,6 @@ urlpatterns = [
     path("doctorPage/<username>", views.doctorPage, name="doctorPage"),
     path("patientMakeAppointment", views.patientMakeAppointment, name="patientMakeAppointment"),
     path("patientPage/<username>", views.patientPage, name="patientPage"),
-    path("patientViewAppointment/<username>", views.patientViewAppointment, name="patientViewAppointment"),
-
+    path("patientViewAppointment", views.patientViewAppointment, name="patientViewAppointment"),
+    path("doctorViewAppointment", views.doctorViewAppointment, name="doctorViewAppointment"),
 ]
