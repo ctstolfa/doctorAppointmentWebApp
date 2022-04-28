@@ -11,4 +11,5 @@ urlpatterns = [
     path("patientPage/<username>", views.patientPage, name="patientPage"),
     path("patientViewAppointment", views.patientViewAppointment, name="patientViewAppointment"),
     path("doctorViewAppointment", views.doctorViewAppointment, name="doctorViewAppointment"),
+    path("doctorSetAvailability", views.doctorSetAvailability, name="doctorSetAvailability"),
 ]

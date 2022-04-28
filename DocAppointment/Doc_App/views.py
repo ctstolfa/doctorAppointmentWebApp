@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Appointment, Patient, Doctor
-from .forms import CreateUserForm, CreatePatientForm, CreateDoctorForm, CreateAppointmentForm
+from .forms import CreateUserForm, CreatePatientForm, CreateDoctorForm, CreateAppointmentForm, SetDoctorAvailability
 
 
 def home(request):
@@ -136,15 +136,28 @@ def patientMakeAppointment(request):
             time = appointment.start_time
             app_date = appointment.date
             patient = Patient.objects.get(user=request.user)
-            test = Appointment.objects.all().filter(date=app_date).filter(start_time=time).filter(doctor=patient.doctor)
-            if len(test) == 0:
+            existing_check = len(Appointment.objects.all()
+                                 .filter(date=app_date).filter(start_time=time).filter(doctor=patient.doctor)) == 0
+            time_check = patient.doctor.start_hour < time < patient.doctor.end_hour
+            day_check = str(app_date.weekday()) in list(patient.doctor.schedule)
+            future_check = app_date > datetime.today().date()
+            if existing_check and time_check and day_check and future_check:
                 appointment.patient = patient
                 appointment.doctor = patient.doctor
+                print(appointment.date.weekday())
                 appointment.end_time = (datetime.combine(date.today(),
                                                          appointment.start_time) + timedelta(minutes=30)).time()
                 appointment.save()
+                return redirect('patientPage', username=request.user.username)
             else:
-                messages.error(request, 'This appointment is not available')
+                if not existing_check:
+                    messages.error(request, 'This appointment is not available')
+                elif not time_check:
+                    messages.error(request, 'The time selected is not during doctor hours')
+                elif not day_check:
+                    messages.error(request, 'The doctor does not work on this day')
+                elif not future_check:
+                    messages.error(request, 'This appointment is in the past')
                 appointment_form = CreateAppointmentForm()
                 return render(request, 'patientMakeAppointment.html', {'appointment_form': appointment_form})
 
@@ -154,18 +167,44 @@ def patientMakeAppointment(request):
 
 
 def patientViewAppointment(request):
-    current_patient = Patient.objects.get(user = request.user)
-    patientAppointments = Appointment.objects.filter(patient = current_patient)
+    current_patient = Patient.objects.get(user=request.user)
+    patientAppointments = Appointment.objects.filter(patient=current_patient)
+    for a in patientAppointments:
+        if a.date < datetime.today().date():
+            a.delete()
     context = locals()
     template = 'patientViewAppointment.html'
     return render(request, template, context)
 
 
 def doctorViewAppointment(request):
-    current_doctor = Doctor.objects.get(user = request.user)
-    doctorAppointments = Appointment.objects.filter(doctor = current_doctor)
+    current_doctor = Doctor.objects.get(user=request.user)
+    doctorAppointments = Appointment.objects.filter(doctor=current_doctor)
+    for a in doctorAppointments:
+        if a.date < datetime.today().date():
+            a.delete()
     context = locals()
     template = 'doctorViewAppointment.html'
+    return render(request, template, context)
+
+
+def doctorSetAvailability(request):
+    doctor = Doctor.objects.get(user=request.user)
+    patients = Patient.objects.all().filter(doctor=doctor)
+    availability_form = SetDoctorAvailability(instance=request.user.doctor)
+    if request.method == "POST":
+        availability_form = SetDoctorAvailability(request.POST, instance=request.user.doctor)
+        if availability_form.is_valid():
+            availability_form.save()
+            appointments = Appointment.objects.filter(doctor=doctor)
+            for a in appointments:
+                if a.start_time < doctor.start_hour or a.end_time > doctor.end_hour:
+                    a.delete()
+                elif not (str(a.date.weekday()) in list(doctor.schedule)):
+                    a.delete()
+            return render(request, 'doctorPage.html', {'user': request.user, 'patients': patients})
+    template = 'doctorSetAvailability.html'
+    context = {'availability_form': availability_form}
     return render(request, template, context)
 
 

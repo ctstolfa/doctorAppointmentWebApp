@@ -34,23 +34,32 @@ class TimeInput(forms.TimeInput):
 	js = 'interval : 30'
 
 
-
-
-
-
 class CreateAppointmentForm(forms.ModelForm):
 
 	date = forms.DateField(widget=DateInput)
 
 	class Meta:
-		HOUR_CHOICES = []
+		time_choices = []
 
 		for x in range(0, 24):
-			HOUR_CHOICES.append((datetime.time(hour=x),
+			time_choices.append((datetime.time(hour=x),
 								 time.strftime("%I:%M %p", time.strptime('{:02d}:00'.format(x), "%H:%M"))))
-			HOUR_CHOICES.append((datetime.time(hour=x, minute=30),
+			time_choices.append((datetime.time(hour=x, minute=30),
 								 time.strftime("%I:%M %p", time.strptime('{:02d}:30'.format(x), "%H:%M"))))
 
 		model = Appointment
-		fields = ('date', 'start_time')
-		widgets = {'start_time': forms.Select(choices=HOUR_CHOICES)}
+		fields = ('date', 'start_time', 'description')
+		widgets = {'start_time': forms.Select(choices=time_choices)}
+
+
+class SetDoctorAvailability(forms.ModelForm):
+	class Meta:
+		hour_choices = []
+
+		for x in range(0, 24):
+			hour_choices.append((datetime.time(hour=x),
+								 time.strftime("%I:%M %p", time.strptime('{:02d}:00'.format(x), "%H:%M"))))
+
+		model = Doctor
+		fields = ('start_hour', 'end_hour', 'schedule')
+		widgets = {'start_hour': forms.Select(choices=hour_choices), 'end_hour': forms.Select(choices=hour_choices)}
