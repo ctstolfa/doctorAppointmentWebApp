@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} - DocApps</title>
+
+    <style>
+        /* main color rgb(78, 148, 193);*/
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #FFFFFF;
+            font-family: sans-serif;
+        }
+
+        .head {
+            background-color: #4E94C1;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            font-weight: bolder;
+            font-size: 1.5em;
+            padding: 0.75em 0 0.5em 0;
+            margin-bottom: 0px;
+            width: 100%;
+            opacity: 1;
+        }
+
+        .nav-wrapper {
+            background-color: #FFFFFF;
+            font-weight: bold;
+            margin: 0;
+            padding: 0.5em 0 0.5em 0;
+            opacity: 1;
+        }
+
+        .nav-internal-wrapper {
+            margin: 0 10% 0 10%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-internal-wrapper ul {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .nav-internal-wrapper ul li {
+            list-style: none;
+            margin: 4px;
+        }
+
+        .nav-internal-wrapper ul li a {
+            text-align: center;
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .nav-internal-wrapper ul li a:hover,
+        .nav-internal-wrapper ul li:nth-child(1) {
+            color: #4E94C1;
+            text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+        }
+
+        .select {
+            background: rgba(255, 255, 255, 0.2);
+            margin: 20px auto;
+            text-align: center;
+            border: 2px solid #FFFFFF;
+            padding: 5px 10px;
+            width: 100px;
+            outline: none;
+            color: #000000;
+            border-radius: 24px;
+            transition: 0.25s;
+        }
+
+        button {
+            border: 0;
+            background: none;
+            display: block;
+            margin: 0px auto;
+            text-align: center;
+            border: 2px solid #FFFFFF;
+            padding: 10px 40px;
+            outline: none;
+            color: #000000;
+            border-radius: 10px;
+            transition: 0.25s;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+    button:hover{
+        background: #FFFFFF;
+    }
+
+        {% block style %}{% endblock %}
+    </style>
+
+</head>
+<body>
+    <nav class="nav-wrapper">
+        <div class="nav-internal-wrapper">
+            <ul>
+                <li>Doctor Appointment App</li>
+                {% block nav %}{% endblock %}
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <h1 class="head">{% block header %}{% endblock %}</h1>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

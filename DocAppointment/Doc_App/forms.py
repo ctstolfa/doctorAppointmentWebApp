@@ -17,6 +17,9 @@ class CreatePatientForm(forms.ModelForm):
 	class Meta:
 		model = Patient
 		fields = ('doctor',)
+		widgets = {
+			"doctor": forms.Select(attrs={"class": "select"}),
+		}
 
 
 class CreateDoctorForm(forms.ModelForm):

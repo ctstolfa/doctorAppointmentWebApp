@@ -21,7 +21,7 @@ def patientPortal(request):
     if request.method == "POST":
         userForm = CreateUserForm(request.POST)
         patientForm = CreatePatientForm(request.POST)
-    if request.POST.get('submit') == 'login':
+    if request.POST.get('submit') == 'Login':
         username = request.POST['username']
         password = request.POST['password']
 
@@ -38,7 +38,7 @@ def patientPortal(request):
         else:
             messages.error(request, 'This Username Or Password does not exist')
             return redirect('patientPortal')
-    elif request.POST.get('submit') == 'register':
+    elif request.POST.get('submit') == 'Register':
         if userForm.is_valid() and patientForm.is_valid():
             userForm.save()
             patient = patientForm.save(commit=False)
@@ -59,7 +59,7 @@ def doctorPortal(request):
     if request.method == "POST":
         userForm = CreateUserForm(request.POST)
         doctorForm = CreateDoctorForm(request.POST)
-    if request.POST.get('submit') == 'login':
+    if request.POST.get('submit') == 'Login':
         username = request.POST['username']
         password = request.POST['password']
 
@@ -76,7 +76,7 @@ def doctorPortal(request):
         else:
             messages.error(request, 'This Username Or Password does not exist')
             return redirect('doctorPortal')
-    elif request.POST.get('submit') == 'register':
+    elif request.POST.get('submit') == 'Register':
         if userForm.is_valid() and doctorForm.is_valid():
             userForm.save()
             doctor = doctorForm.save(commit=False)
