@@ -5,6 +5,7 @@
     <title>Appointment View Page</title>
 </head>
 <body>
+    <h3> Scheduled </h3>
     <table>
         <tr>
             <th>Doctor</th>
@@ -23,5 +24,26 @@
         </tr>
     {%endfor%}
     </table>
+
+    <h3> Canceled </h3>
+    <table>
+        <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+        {% for app in canceledAppointments %}
+        <tr>
+        <td>{{app.patient}}</td>
+        <td>{{app.doctor}}</td>
+        <td>{{app.date}}</td>
+        <td>{{app.start_time}}</td>
+        <td>{{app.end_time}}</td>
+        </tr>
+    {%endfor%}
+    </table>
+
 </body>
 </html>
