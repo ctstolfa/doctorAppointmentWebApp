@@ -168,7 +168,8 @@ def patientMakeAppointment(request):
 
 def patientViewAppointment(request):
     current_patient = Patient.objects.get(user=request.user)
-    patientAppointments = Appointment.objects.filter(patient=current_patient)
+    patientAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)
+    canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)
     for a in patientAppointments:
         if a.date < datetime.today().date():
             a.delete()
@@ -180,6 +181,7 @@ def patientViewAppointment(request):
 def doctorViewAppointment(request):
     current_doctor = Doctor.objects.get(user=request.user)
     doctorAppointments = Appointment.objects.filter(doctor=current_doctor)
+    canceledAppointments = Appointment.objects.filter(patient=current_doctor).filter(is_canceled=True)
     for a in doctorAppointments:
         if a.date < datetime.today().date():
             a.delete()
