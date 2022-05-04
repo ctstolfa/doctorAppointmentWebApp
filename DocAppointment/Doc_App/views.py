@@ -136,7 +136,8 @@ def patientPage(request, username):
 def patientMakeAppointment(request):
     appointment_form = CreateAppointmentForm()
     patient = Patient.objects.get(user=request.user)
-    existing_apps = Appointment.objects.all().filter(doctor=patient.doctor)
+    existing_apps = Appointment.objects.all().filter(doctor=patient.doctor).filter(is_canceled=False)\
+        .order_by('date', 'start_time')
     if request.method == "POST":
         appointment_form = CreateAppointmentForm(request.POST)
         if appointment_form.is_valid():

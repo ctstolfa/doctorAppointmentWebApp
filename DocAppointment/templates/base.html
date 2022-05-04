@@ -14,6 +14,7 @@
         body {
             background-color: #FFFFFF;
             font-family: sans-serif;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
 
         .head {
@@ -27,6 +28,7 @@
             margin-bottom: 0px;
             width: 100%;
             opacity: 1;
+
         }
 
         .nav-wrapper {
@@ -65,7 +67,7 @@
         .nav-internal-wrapper ul li a:hover,
         .nav-internal-wrapper ul li:nth-child(1) {
             color: #4E94C1;
-            text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
+            -webkit-text-stroke: 1px #000000;
         }
 
         .split {
@@ -74,17 +76,21 @@
             position: fixed;
             z-index: 1;
             bottom: 0;
-            overflow-x: hidden;
         }
 
         /* Control the left side */
         .left {
             left: 0;
+            overflow: none;
+            max-height: 80vh;
+            max-width: 50vw;
         }
 
         /* Control the right side */
         .right {
             right: 0;
+            max-height: 80vh;
+            max-width: 50vw;
         }
 
         /* If you want the content centered horizontally and vertically */

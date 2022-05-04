@@ -6,7 +6,7 @@
 {% block style %}
 
     .appointment-wrapper {
-        width: 400px;
+        width: 401px;
         padding: 40px 40px 20px 40px;
         margin: 1% auto 1% auto;
         background: #4E94C1;
@@ -61,6 +61,26 @@
         border-radius: 10px;
     }
 
+    table {
+        white-space: nowrap;
+        border-collapse:collapse;
+        margin: 10px;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+    }
+
+    tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    td, th {
+        padding: 2px 8px;
+    }
+
+    .table-wrapper {
+        overflow-y: auto;
+        max-height: 15em;
+    }
 {% endblock %}
 {% block content %}
     {% for message in messages %}
@@ -84,23 +104,29 @@
     </div>
     <div class="split right">
         <div class="centered">
-            <table>
-                <thead>
-                    <th>Doctor</th>
-                    <th>Date</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                </thead>
-                {% for app in Appointments %}
-                <tr>
-                    <td>{{app.doctor}}</td>
-                    <td>{{app.date}}</td>
-                    <td>{{app.start_time|time:"g:iA"|lower}}</td>
-                    <td>{{app.end_time|time:"g:iA"|lower}}</td>
-                    <td><a herf="#"><button>Cancel</button></a></td>
-                </tr>
-                {%endfor%}
-            </table>
+            <div class="appointment-wrapper">
+                <h3>{{doctor}} is available {{doctor.start_hour}} to {{doctor.end_hour}}</h3>
+                <br>
+                <h3>Current Appointments Scheduled</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </thead>
+                        {% for app in appointments %}
+                        <tr>
+                            <td>{{app.doctor}}</td>
+                            <td>{{app.date}}</td>
+                            <td>{{app.start_time|time:"g:iA"|lower}}</td>
+                            <td>{{app.end_time|time:"g:iA"|lower}}</td>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
