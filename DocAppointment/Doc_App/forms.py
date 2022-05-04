@@ -52,7 +52,10 @@ class CreateAppointmentForm(forms.ModelForm):
 
 		model = Appointment
 		fields = ('date', 'start_time', 'description')
-		widgets = {'start_time': forms.Select(choices=time_choices)}
+		widgets = {
+			'start_time': forms.Select(choices=time_choices, attrs={"class": "select"}),
+		}
+
 
 
 class SetDoctorAvailability(forms.ModelForm):

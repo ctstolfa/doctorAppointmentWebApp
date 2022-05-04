@@ -68,12 +68,40 @@
             text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
         }
 
+        .split {
+            height: 80%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            bottom: 0;
+            overflow-x: hidden;
+        }
+
+        /* Control the left side */
+        .left {
+            left: 0;
+        }
+
+        /* Control the right side */
+        .right {
+            right: 0;
+        }
+
+        /* If you want the content centered horizontally and vertically */
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
         .select {
             background: rgba(255, 255, 255, 0.2);
             margin: 20px auto;
             text-align: center;
             border: 2px solid #FFFFFF;
-            padding: 5px 10px;
+            padding: 5px 5px;
             width: 100px;
             outline: none;
             color: #000000;
@@ -97,9 +125,9 @@
             font-weight: bold;
         }
 
-    button:hover{
-        background: #FFFFFF;
-    }
+        button:hover{
+            background: #FFFFFF;
+        }
 
         {% block style %}{% endblock %}
     </style>
