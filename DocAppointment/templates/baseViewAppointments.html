@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        h3 {
+            margin: 10px;
+        }
+
+        button {
+            border: 2px solid #4E94C1;
+            padding: 10px 30px;
+        }
+
+        button:hover{
+            background: #4E94C1;
+        }
+
+        .block {
+            padding: 0px 0px 0px 0px;
+            max-height: 80vh;
+            margin: 1% auto 1% auto;
+            text-align: center;
+            list-style: none;
+            overflow-y: auto;
+        }
+    </style>
+
+<body>
+    <div class="split left">
+        <h3 align="center"> Scheduled </h3>
+        <div class="block">
+            <table>
+                <thead>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </thead>
+                {% for app in appointments %}
+                <tr>
+                    <td>{{app.patient}}</td>
+                    <td>{{app.doctor}}</td>
+                    <td>{{app.date}}</td>
+                    <td>{{app.start_time|time:"g:iA"|lower}}</td>
+                    <td>{{app.end_time|time:"g:iA"|lower}}</td>
+                    <td><a herf="#"><button>Cancel</button></a></td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
+    </div>
+
+    <div class="split right">
+        <h3 align="center">Canceled</h3>
+        <div class="block">
+            <table>
+                <thead>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </thead>
+                {% for app in canceledAppointments %}
+                <tr>
+                    <td>{{app.patient}}</td>
+                    <td>{{app.doctor}}</td>
+                    <td>{{app.date}}</td>
+                    <td>{{app.start_time|time:"g:iA"|lower}}</td>
+                    <td>{{app.end_time|time:"g:iA"|lower}}</td>
+                    <td><a herf="#"><button>Accept</button></a></td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
+    </div>
+</body>
+</html>

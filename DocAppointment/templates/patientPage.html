@@ -4,8 +4,10 @@
 {% block header %}Welcome Patient {{ user.username }}{% endblock %}
 
 {% block content %}
-    <br>
-    <h3> Patient Name: {{ patient }} </h3><br/>
-    <h3> Current Doctor: {{ patient.doctor }} </h3>
+    <div class="split">
+        <br>
+        <h3> Patient Name: {{ patient }} </h3><br/>
+        <h3> Current Doctor: {{ patient.doctor }} </h3>
+    </div>
 
 {% endblock %}

@@ -68,4 +68,7 @@ class SetDoctorAvailability(forms.ModelForm):
 
 		model = Doctor
 		fields = ('start_hour', 'end_hour', 'schedule')
-		widgets = {'start_hour': forms.Select(choices=hour_choices), 'end_hour': forms.Select(choices=hour_choices)}
+		widgets = {
+			'start_hour': forms.Select(choices=hour_choices, attrs={"class": "select"}),
+			'end_hour': forms.Select(choices=hour_choices, attrs={"class": "select"})
+		}

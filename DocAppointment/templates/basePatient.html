@@ -1,12 +1,8 @@
 {% extends "base.html" %}
 
-{% block style %}
-
-{% endblock %}
-
 {% block nav %}
-    <li class="logout"><a href="{% url 'patientPage' username=user.username %}"> Profile </a></li>
-    <li class="patient-portal"><a href="/patientMakeAppointment"> Make an Appointment </a></li>
-    <li class="doctor-portal"><a href="/patientViewAppointment"> View My Appointments </a></li>
-    <li class="logout"><a href="{% url 'logout' %}"> Logout</a></li>
+    <li><a href="{% url 'patientPage' username=user.username %}"> Profile </a></li>
+    <li><a href="/patientMakeAppointment"> Make an Appointment </a></li>
+    <li><a href="/patientViewAppointment"> View My Appointments </a></li>
+    <li><a href="{% url 'logout' %}"> Logout</a></li>
 {% endblock %}
