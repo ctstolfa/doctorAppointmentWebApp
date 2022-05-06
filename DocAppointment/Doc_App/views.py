@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import Appointment, Patient, Doctor
 from .forms import CreateUserForm, CreatePatientForm, CreateDoctorForm, CreateAppointmentForm, SetDoctorAvailability
+from django.contrib.auth import logout as logout_user
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -21,7 +23,7 @@ def patientPortal(request):
     if request.method == "POST":
         userForm = CreateUserForm(request.POST)
         patientForm = CreatePatientForm(request.POST)
-    if request.POST.get('submit') == 'login':
+    if request.POST.get('submit') == 'Login':
         username = request.POST['username']
         password = request.POST['password']
 
@@ -38,7 +40,7 @@ def patientPortal(request):
         else:
             messages.error(request, 'This Username Or Password does not exist')
             return redirect('patientPortal')
-    elif request.POST.get('submit') == 'register':
+    elif request.POST.get('submit') == 'Register':
         if userForm.is_valid() and patientForm.is_valid():
             userForm.save()
             patient = patientForm.save(commit=False)
@@ -59,7 +61,7 @@ def doctorPortal(request):
     if request.method == "POST":
         userForm = CreateUserForm(request.POST)
         doctorForm = CreateDoctorForm(request.POST)
-    if request.POST.get('submit') == 'login':
+    if request.POST.get('submit') == 'Login':
         username = request.POST['username']
         password = request.POST['password']
 
@@ -76,7 +78,7 @@ def doctorPortal(request):
         else:
             messages.error(request, 'This Username Or Password does not exist')
             return redirect('doctorPortal')
-    elif request.POST.get('submit') == 'register':
+    elif request.POST.get('submit') == 'Register':
         if userForm.is_valid() and doctorForm.is_valid():
             userForm.save()
             doctor = doctorForm.save(commit=False)
@@ -91,6 +93,7 @@ def doctorPortal(request):
     return render(request, 'doctorPortal.html', {'user_form': userForm, 'patient_form': doctorForm})
 
 
+@login_required()
 def doctorPage(request, username):
     # If no such user exists raise 404
     try:
@@ -104,11 +107,13 @@ def doctorPage(request, username):
     if request.user.is_authenticated and request.user == user:
         editable = True
 
+    patients = Patient.objects.all().filter(doctor=(Doctor.objects.get(user=user)))
     context = locals()
     template = 'doctorPage.html'
     return render(request, template, context)
 
 
+@login_required()
 def patientPage(request, username):
     # If no such user exists raise 404
     try:
@@ -121,21 +126,25 @@ def patientPage(request, username):
     # Handling non authenticated user for obvious reasons
     if request.user.is_authenticated and request.user == user:
         editable = True
+    patient = Patient.objects.get(user=user)
 
     context = locals()
     template = 'patientPage.html'
     return render(request, template, context)
 
 
+@login_required()
 def patientMakeAppointment(request):
     appointment_form = CreateAppointmentForm()
+    patient = Patient.objects.get(user=request.user)
+    existing_apps = Appointment.objects.all().filter(doctor=patient.doctor).filter(is_canceled=False)\
+        .order_by('date', 'start_time')
     if request.method == "POST":
         appointment_form = CreateAppointmentForm(request.POST)
         if appointment_form.is_valid():
             appointment = appointment_form.save(commit=False)
             time = appointment.start_time
             app_date = appointment.date
-            patient = Patient.objects.get(user=request.user)
             existing_check = len(Appointment.objects.all()
                                  .filter(date=app_date).filter(start_time=time).filter(doctor=patient.doctor)) == 0
             time_check = patient.doctor.start_hour < time < patient.doctor.end_hour
@@ -159,18 +168,24 @@ def patientMakeAppointment(request):
                 elif not future_check:
                     messages.error(request, 'This appointment is in the past')
                 appointment_form = CreateAppointmentForm()
-                return render(request, 'patientMakeAppointment.html', {'appointment_form': appointment_form})
+                return render(request, 'patientMakeAppointment.html',
+                              {'appointment_form': appointment_form, 'patient': patient,
+                               'doctor': patient.doctor, 'appointments': existing_apps})
 
     template = 'patientMakeAppointment.html'
-    context = {'appointment_form': appointment_form}
+    context = {'appointment_form': appointment_form, 'patient': patient,
+               'doctor': patient.doctor, 'appointments': existing_apps}
     return render(request, template, context)
 
 
+@login_required()
 def patientViewAppointment(request):
     current_patient = Patient.objects.get(user=request.user)
-    patientAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)
-    canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)
-    for a in patientAppointments:
+    appointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)\
+        .order_by('date', 'start_time')
+    canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)\
+        .order_by('date', 'start_time')
+    for a in appointments:
         if a.date < datetime.today().date():
             a.delete()
     context = locals()
@@ -178,11 +193,12 @@ def patientViewAppointment(request):
     return render(request, template, context)
 
 
+@login_required()
 def doctorViewAppointment(request):
     current_doctor = Doctor.objects.get(user=request.user)
-    doctorAppointments = Appointment.objects.filter(doctor=current_doctor)
-    canceledAppointments = Appointment.objects.filter(patient=current_doctor).filter(is_canceled=True)
-    for a in doctorAppointments:
+    appointments = Appointment.objects.filter(doctor=current_doctor)
+    canceledAppointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=True)
+    for a in appointments:
         if a.date < datetime.today().date():
             a.delete()
     context = locals()
@@ -190,6 +206,7 @@ def doctorViewAppointment(request):
     return render(request, template, context)
 
 
+@login_required()
 def doctorSetAvailability(request):
     doctor = Doctor.objects.get(user=request.user)
     patients = Patient.objects.all().filter(doctor=doctor)
@@ -210,3 +227,7 @@ def doctorSetAvailability(request):
     return render(request, template, context)
 
 
+@login_required()
+def logout(request):
+    logout_user(request)
+    return redirect("home")

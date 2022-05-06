@@ -17,6 +17,9 @@ class CreatePatientForm(forms.ModelForm):
 	class Meta:
 		model = Patient
 		fields = ('doctor',)
+		widgets = {
+			"doctor": forms.Select(attrs={"class": "select"}),
+		}
 
 
 class CreateDoctorForm(forms.ModelForm):
@@ -49,7 +52,10 @@ class CreateAppointmentForm(forms.ModelForm):
 
 		model = Appointment
 		fields = ('date', 'start_time', 'description')
-		widgets = {'start_time': forms.Select(choices=time_choices)}
+		widgets = {
+			'start_time': forms.Select(choices=time_choices, attrs={"class": "select"}),
+		}
+
 
 
 class SetDoctorAvailability(forms.ModelForm):
@@ -62,4 +68,7 @@ class SetDoctorAvailability(forms.ModelForm):
 
 		model = Doctor
 		fields = ('start_hour', 'end_hour', 'schedule')
-		widgets = {'start_hour': forms.Select(choices=hour_choices), 'end_hour': forms.Select(choices=hour_choices)}
+		widgets = {
+			'start_hour': forms.Select(choices=hour_choices, attrs={"class": "select"}),
+			'end_hour': forms.Select(choices=hour_choices, attrs={"class": "select"})
+		}

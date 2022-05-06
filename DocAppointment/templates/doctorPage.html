@@ -1,19 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Doctor Page</title>
-</head>
-<body>
-    <li class="doctor-portal"><a href="/doctorViewAppointment"> View My Appointments </a></li>
-    <li class="doctor-portal"><a href="/doctorSetAvailability"> Set Availability </a></li>
-    <h1>Welcome Doctor {{ user.username }}</h1>
-    <h2>Your Current Patients Are ... </h2>
-    <ul>
-        {% for patient in patients %}
-        <li> {{ patient }} </li>
-        {% endfor %}
-    </ul>
+{% extends "baseDoctor.html" %}
 
-</body>
-</html>
+{% block title %}Doctor Page  {{ user.username }}{% endblock %}
+{% block header %}Welcome Doctor {{ user.username }}{% endblock %}
+
+{% block style %}
+    .table-wrapper {
+        width: 100px;
+        padding: 20px;
+        margin: 1% auto 1% auto;
+        list-style: none;
+        overflow-y: auto;
+        max-height: 20em;
+    }
+    table{
+        overflow-y: auto;
+        max-height: 15em;
+        margin: auto;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="centered">
+        <h2>Your Current Patients Are ... </h2>
+        <div class="table-wrapper">
+            <table>
+                {% for patient in patients %}
+                <tr> <td>{{ patient }} </td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

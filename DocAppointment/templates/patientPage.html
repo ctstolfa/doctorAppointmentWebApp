@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Patient Page</title>
-    
-</head>
-<body>
-    <header class="nav-wrapper">
-        <ul>
-           <li class="logout"><a href="/"> Logout  </a></li>
-           <li class="patient-portal"><a href="/patientMakeAppointment"> Make an Appointment </a></li>
-           <li class="doctor-portal"><a href="/patientViewAppointment"> View My Appointments </a></li>
-       </ul>
-   </header>
-    <h1>Welcome Patient {{ user.username }}</h1>
-    <form action="/patientMakeAppointment">
-    <input type="submit" value="Make an Appointment" />
-    <form action="/patientViewAppointment">
-    <input type="submit" value="View Appointments" />
-</form>
-</form>
-</body>
-</html>
+{% extends "basePatient.html" %}
+
+{% block title %}Patient Page  {{ user.username }}{% endblock %}
+{% block header %}Welcome Patient {{ user.username }}{% endblock %}
+
+{% block content %}
+    <div class="split">
+        <br>
+        <h3> Patient Name: {{ patient }} </h3><br/>
+        <h3> Current Doctor: {{ patient.doctor }} </h3>
+    </div>
+
+{% endblock %}
