@@ -44,6 +44,7 @@ class Appointment(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     description = models.TextField(null=True)
+    is_canceled = models.BooleanField(default=False)
 
     def get_patient(self):
         return str(self.patient)

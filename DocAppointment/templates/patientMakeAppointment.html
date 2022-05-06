@@ -1,23 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Appointment Creation Page</title>
-</head>
-<body>
+{% extends "basePatient.html" %}
+
+{% block title %}Patient Make Appointments{% endblock %}
+{% block header %}Create an Appointment with {{patient.doctor}}{% endblock %}
+
+{% block style %}
+
+    .appointment-wrapper {
+        width: 401px;
+        padding: 40px 40px 20px 40px;
+        margin: 1% auto 1% auto;
+        background: #4E94C1;
+        text-align: center;
+        list-style: none;
+        box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.4);
+        overflow-y: auto;
+        max-height: 20em;
+    }
+
+    .appointment-wrapper input[type = "submit"]{
+        border: 0;
+        background: none;
+        display: block;
+        margin: 0px auto;
+        text-align: center;
+        border: 2px solid #FFFFFF;
+        padding: 10px 40px;
+        outline: none;
+        color: #000000;
+        border-radius: 10px;
+        transition: 0.25s;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .appointment-wrapper input[type = "date"]{
+        background: rgba(255, 255, 255, 0.2);
+        margin: 20px 10px 20px 0;
+        text-align: center;
+        border: 2px solid #FFFFFF;
+        padding: 5px 5px;
+        width: 100px;
+        outline: none;
+        color: #000000;
+        border-radius: 24px;
+        transition: 0.25s;
+    }
+
+    .select {
+        margin: 20px 10px 20px 0;
+    }
+
+    .appointment-wrapper input[type = "submit"]:hover{
+        background: #FFFFFF;
+    }
+
+    textarea {
+        resize: none;
+        font-family: sans-serif;
+        width: 350px;
+        border-radius: 10px;
+    }
+
+    table {
+        background-color: #FFFFFF;
+        border-radius: 10px;
+    }
+
+    td, th {
+        padding: 2px 8px;
+    }
+
+    .table-wrapper {
+        overflow-y: auto;
+        max-height: 15em;
+        margin: auto;
+    }
+{% endblock %}
+{% block content %}
     {% for message in messages %}
     <script>
         alert('{{ message }}')
     </script>
     {% endfor %}
-    <form class="appointment-wrapper" method="post">
-        {% csrf_token %}
-        <h1>Create an Appointment with {{user.doc}} </h1>
-        {% if form.errors %}
-        <br><h2>There was an error in your form!</h2><br>
-        {% endif %}
-        {{ appointment_form }}
-        <input type="submit" name="submit" value="create appointment">
-    </form>
-</body>
-</html>
+    <div class="split left">
+        <div class="centered">
+            <form class="appointment-wrapper" method="post">
+                {% csrf_token %}
+                {% if form.errors %}
+                <br><h2>There was an error in your form!</h2><br>
+                {% endif %}
+                {{ appointment_form }}
+                <br>
+                <br>
+                <input type="submit" name="submit" value="Create Appointment">
+            </form>
+        </div>
+    </div>
+    <div class="split right">
+        <div class="centered">
+            <div class="appointment-wrapper">
+                <h3>{{doctor}} is available {{doctor.start_hour}} to {{doctor.end_hour}}</h3>
+                <br>
+                <h3>Current Appointments Scheduled</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </thead>
+                        {% for app in appointments %}
+                        <tr>
+                            <td>{{app.doctor}}</td>
+                            <td>{{app.date}}</td>
+                            <td>{{app.start_time|time:"g:iA"|lower}}</td>
+                            <td>{{app.end_time|time:"g:iA"|lower}}</td>
+                        </tr>
+                        {%endfor%}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

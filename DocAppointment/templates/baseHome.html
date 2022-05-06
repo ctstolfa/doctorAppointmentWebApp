@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block style %}
+
+    .login-wrapper{
+        width: 450px;
+        padding: 40px 40px 20px 40px;
+        margin: 1% auto 1% auto;
+        background: #4E94C1;
+        text-align: center;
+        list-style: none;
+        box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.4);
+        overflow-y: auto;
+        max-height: 20em;
+    }
+
+    .login-wrapper input[type = "text"],.login-wrapper input[type = "password"]{
+        border: 0;
+        background: rgb(255, 255, 255, 0.2);
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+        border: 2px solid #FFFFFF;
+        padding: 10px 10px;
+        width: 200px;
+        outline: none;
+        color: #000000;
+        border-radius: 10px;
+        transition: 0.25s;
+    }
+
+    .login-wrapper input[type = "text"]::placeholder,.login-wrapper input[type = "password"]::placeholder{
+        color: #000000;
+    }
+
+    .login-wrapper input[type = "text"]:focus,.login-wrapper input[type = "password"]:focus{
+        width: 280px;
+    }
+
+    .login-wrapper input[type = "submit"]{
+        border: 0;
+        background: none;
+        display: block;
+        margin: 0px auto;
+        text-align: center;
+        border: 2px solid #FFFFFF;
+        padding: 10px 40px;
+        outline: none;
+        color: #000000;
+        border-radius: 10px;
+        transition: 0.25s;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .login-wrapper input[type = "submit"]:hover{
+        background: #FFFFFF;
+    }
+
+
+{% endblock %}
+
+{% block nav %}
+    <li class="home"><a href="/"> Home  </a></li>
+    <li class="patient-portal"><a href="/PatientPortal"> Patient Portal </a></li>
+    <li class="doctor-portal"><a href="/DoctorPortal"> Doctor Portal </a></li>
+{% endblock %}

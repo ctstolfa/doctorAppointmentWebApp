@@ -1,89 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>doctor portal</title>
-    <style>
-        body {
-            background-color: white;
-        }
+{% extends "baseHome.html" %}
 
-        /* Split the screen in half */
-        .split {
-            height: 80%;
-            width: 50%;
-            position: fixed;
-            z-index: 1;
-            bottom: 0;
-            overflow-x: hidden;
-        }
+{% block title %}Doctor Portal{% endblock %}
+{% block header %}Doctor Portal{% endblock %}
 
-        /* Control the left side */
-        .left {
-            left: 0;
-            background-color: rgb(149, 202, 237);
-            outline-style: solid;
-            outline-color: white;
-        }
-
-        /* Control the right side */
-        .right {
-            right: 0;
-            background-color: rgb(206, 221, 231);
-            outline-style: solid;
-            outline-color: white;
-        }
-
-        /* If you want the content centered horizontally and vertically */
-        .centered {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: left;
-        }
-
-        .nav-wrapper{
-            background-color: rgb(206, 221, 231);
-            margin: 0;
-            padding: 0;
-            opacity: 1;
-        }
-
-        .nav-wrapper ul{
-            display: flex;
-            justify-content: space;
-            text-align: center;
-        }
-
-        .nav-wrapper ul li{
-            list-style:  none;
-            margin: 5px;
-        }
-        .nav-wrapper ul li a{
-            text-align: center;
-            text-decoration: none;
-            color: white;
-            margin: 5px;
-        }
-
-    </style>
-</head>
-<body>
+{% block content %}
     {% for message in messages %}
     <script>
         alert('{{ message }}')
     </script>
     {% endfor %}
-    <header class="nav-wrapper">
-         <ul>
-            <li>Welcome to DASS would you like to make an appointment?</li>
-            <li class="home"><a href="/"> Home  </a></li>
-            <li class="patient-portal"><a href="/PatientPortal"> Patient Portal </a></li>
-            <li class="doctor-portal"><a href="/DoctorPortal"> Doctor Portal </a></li>
-        </ul>
-    </header>
-    <h1> Doctor Portal </h1>
     <div class="split left">
         <div class="centered">
             <form class="login-wrapper" method="post">
@@ -92,7 +17,7 @@
                 <input style="display: inline-block" type="text" name="username" id ="patient" placeholder="UserName">
                 <input style="display: inline-block" type="password" name="password" id ="password" placeholder="Password">
                 <br/><br/>
-                <input type="submit" name="submit" value="login">
+                <input type="submit" name="submit" value="Login">
             </form>
         </div>
     </div>
@@ -108,11 +33,10 @@
                 <br/>
                 {{ doctor_form }}
                 <br/><br/>
-                <input type="submit" name="submit" value="register">
+                <input type="submit" name="submit" value="Register">
                 <br/><br/>
 
             </form>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
