@@ -227,6 +227,16 @@ def doctorSetAvailability(request):
     return render(request, template, context)
 
 
+def cancel_appointment(request,username,appointment):
+    appointment.delete()
+    if(username == Patient.objects.all().filter(user=username)):
+        template = "patientViewAppointment.html"
+    elif(username == Doctor.objects.all().filter(user=username)):
+        template = "doctorViewAppointment.html"
+    context = {'user': request.user}
+    return render(request,template, context)
+    
+    
 @login_required()
 def logout(request):
     logout_user(request)

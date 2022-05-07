@@ -45,7 +45,7 @@
                     <td>{{app.date}}</td>
                     <td>{{app.start_time|time:"g:iA"|lower}}</td>
                     <td>{{app.end_time|time:"g:iA"|lower}}</td>
-                    <td><a herf="#"><button>Cancel</button></a></td>
+                    <td><a herf="{% url 'cancel_appointment' user.username app %}"><button>Cancel</button></a></td>
                 </tr>
                 {%endfor%}
             </table>
