@@ -146,7 +146,8 @@ def patientMakeAppointment(request):
             time = appointment.start_time
             app_date = appointment.date
             existing_check = len(Appointment.objects.all()
-                                 .filter(date=app_date).filter(start_time=time).filter(doctor=patient.doctor)) == 0
+                                 .filter(date=app_date).filter(start_time=time)
+                                 .filter(doctor=patient.doctor).filter(is_canceled=False)) == 0
             time_check = patient.doctor.start_hour < time < patient.doctor.end_hour
             day_check = str(app_date.weekday()) in list(patient.doctor.schedule)
             future_check = app_date > datetime.today().date()
@@ -226,7 +227,35 @@ def doctorSetAvailability(request):
     context = {'availability_form': availability_form}
     return render(request, template, context)
 
-
+@login_required()
+def cancelAppointment(request,appointmentId):
+    appointment = Appointment.objects.get(id=appointmentId)
+    appointment.is_canceled = True
+    appointment.save()
+    template = "patientViewAppointment.html"
+    if len(Patient.objects.all().filter(user=request.user)) == 1:
+        template = "patientViewAppointment.html"
+        current_patient = Patient.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)\
+        .order_by('date', 'start_time')
+        canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)\
+        .order_by('date', 'start_time')
+        context = locals()
+        return render(request, template, context)
+        
+    elif len(Doctor.objects.all().filter(user=request.user)) == 1:
+        template = "doctorViewAppointment.html"
+        current_doctor = Doctor.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(doctor=current_doctor)
+        canceledAppointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=True)
+        context = locals()
+        return render(request, template, context)
+        
+    context = locals()
+    return render(request, template, context)
+    
+    
+    
 @login_required()
 def logout(request):
     logout_user(request)
