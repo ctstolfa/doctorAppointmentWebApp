@@ -226,15 +226,29 @@ def doctorSetAvailability(request):
     context = {'availability_form': availability_form}
     return render(request, template, context)
 
-
-def cancel_appointment(request,username,appointment):
-    appointment.delete()
+@login_required()
+def cancelAppointment(request,username,appointmentId):
+    print(appointmentId)
+    print("test")
+    appointment=Appointment.get(id=appointmentId)
+    appointment.is_canceled = True
     if(username == Patient.objects.all().filter(user=username)):
         template = "patientViewAppointment.html"
+        current_patient = Patient.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)\
+        .order_by('date', 'start_time')
+        canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)\
+        .order_by('date', 'start_time')
+        
     elif(username == Doctor.objects.all().filter(user=username)):
         template = "doctorViewAppointment.html"
-    context = {'user': request.user}
+        current_doctor = Doctor.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(doctor=current_doctor)
+        canceledAppointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=True)
+        
+    context = locals()
     return render(request,template, context)
+    
     
     
 @login_required()

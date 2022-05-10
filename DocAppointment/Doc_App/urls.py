@@ -12,5 +12,6 @@ urlpatterns = [
     path("patientViewAppointment", views.patientViewAppointment, name="patientViewAppointment"),
     path("doctorViewAppointment", views.doctorViewAppointment, name="doctorViewAppointment"),
     path("doctorSetAvailability", views.doctorSetAvailability, name="doctorSetAvailability"),
+    path("cancelAppointment/<username>/<appointmentId>", views.cancelAppointment, name="cancelAppointment"), 
     path("logout", views.logout, name="logout"),
 ]
