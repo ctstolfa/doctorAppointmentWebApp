@@ -79,8 +79,8 @@
                     <td>{{app.start_time|time:"g:iA"|lower}}</td>
                     <td>{{app.end_time|time:"g:iA"|lower}}</td>
                     <td>
-                        <a herf="#">
-                        <button type="button">Accept</button>
+                        <a href="{% url 'acceptCanceledAppointment' appointmentId=app.id %}">
+                            <button type="button">Accept</button>
                         </a>
                     </td>
                 </tr>

@@ -184,7 +184,8 @@ def patientViewAppointment(request):
     current_patient = Patient.objects.get(user=request.user)
     appointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)\
         .order_by('date', 'start_time')
-    canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)\
+    canceledAppointments = Appointment.objects\
+        .filter(patient=current_patient).filter(is_canceled=True).filter(canceled_by_doc=True)\
         .order_by('date', 'start_time')
     for a in appointments:
         if a.date < datetime.today().date():
@@ -197,8 +198,11 @@ def patientViewAppointment(request):
 @login_required()
 def doctorViewAppointment(request):
     current_doctor = Doctor.objects.get(user=request.user)
-    appointments = Appointment.objects.filter(doctor=current_doctor)
-    canceledAppointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=True)
+    appointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=False)\
+        .order_by('date', 'start_time')
+    canceledAppointments = Appointment.objects\
+        .filter(doctor=current_doctor).filter(is_canceled=True).filter(canceled_by_doc=False)\
+        .order_by('date', 'start_time')
     for a in appointments:
         if a.date < datetime.today().date():
             a.delete()
@@ -217,44 +221,95 @@ def doctorSetAvailability(request):
         if availability_form.is_valid():
             availability_form.save()
             appointments = Appointment.objects.filter(doctor=doctor)
+            cancel_apps = []
             for a in appointments:
                 if a.start_time < doctor.start_hour or a.end_time > doctor.end_hour:
-                    a.delete()
+                    cancel_apps.append(a.id)
                 elif not (str(a.date.weekday()) in list(doctor.schedule)):
-                    a.delete()
-            return render(request, 'doctorPage.html', {'user': request.user, 'patients': patients})
+                    cancel_apps.append(a.id)
+            return redirect('scheduleCancelAppointment', appointments=cancel_apps)
     template = 'doctorSetAvailability.html'
     context = {'availability_form': availability_form}
     return render(request, template, context)
 
+
 @login_required()
-def cancelAppointment(request,appointmentId):
+def cancelAppointment(request, appointmentId):
     appointment = Appointment.objects.get(id=appointmentId)
     appointment.is_canceled = True
-    appointment.save()
+
     template = "patientViewAppointment.html"
     if len(Patient.objects.all().filter(user=request.user)) == 1:
+        appointment.canceled_by_doc = False
+        appointment.save()
         template = "patientViewAppointment.html"
         current_patient = Patient.objects.get(user=request.user)
         appointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False)\
-        .order_by('date', 'start_time')
-        canceledAppointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=True)\
-        .order_by('date', 'start_time')
+            .order_by('date', 'start_time')
+        canceledAppointments = Appointment.objects\
+            .filter(patient=current_patient).filter(is_canceled=True).filter(canceled_by_doc=True)\
+            .order_by('date', 'start_time')
         context = locals()
         return render(request, template, context)
         
     elif len(Doctor.objects.all().filter(user=request.user)) == 1:
+        appointment.canceled_by_doc = True
+        appointment.save()
         template = "doctorViewAppointment.html"
         current_doctor = Doctor.objects.get(user=request.user)
-        appointments = Appointment.objects.filter(doctor=current_doctor)
-        canceledAppointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=True)
+        appointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=False)\
+            .order_by('date', 'start_time')
+        canceledAppointments = Appointment.objects\
+            .filter(doctor=current_doctor).filter(is_canceled=True).filter(canceled_by_doc=False)\
+            .order_by('date', 'start_time')
         context = locals()
         return render(request, template, context)
         
     context = locals()
     return render(request, template, context)
-    
-    
+
+
+@login_required()
+def scheduleCancelAppointment(request, appointments):
+    temp = appointments.replace('[', '').replace(']', '')
+    apps = temp.split(',')
+    if len(apps) > 0:
+        for a in apps:
+            appointment = Appointment.objects.get(id=int(a))
+            appointment.is_canceled = True
+            appointment.canceled_by_doc = True
+            appointment.save()
+    patients = Patient.objects.all().filter(doctor=Doctor.objects.get(user=request.user))
+    return render(request, 'doctorPage.html', {'user': request.user, 'patients': patients})
+
+
+@login_required()
+def acceptCanceledAppointment(request, appointmentId):
+    appointment = Appointment.objects.get(id=appointmentId)
+    appointment.delete()
+    template = "patientViewAppointment.html"
+    if len(Patient.objects.all().filter(user=request.user)) == 1:
+        template = "patientViewAppointment.html"
+        current_patient = Patient.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(patient=current_patient).filter(is_canceled=False) \
+            .order_by('date', 'start_time')
+        canceledAppointments = Appointment.objects.filter(patient=current_patient)\
+            .filter(is_canceled=True).filter(canceled_by_doc=True).order_by('date', 'start_time')
+        context = locals()
+        return render(request, template, context)
+
+    elif len(Doctor.objects.all().filter(user=request.user)) == 1:
+        template = "doctorViewAppointment.html"
+        current_doctor = Doctor.objects.get(user=request.user)
+        appointments = Appointment.objects.filter(doctor=current_doctor).filter(is_canceled=False) \
+            .order_by('date', 'start_time')
+        canceledAppointments = Appointment.objects.filter(doctor=current_doctor)\
+            .filter(is_canceled=True).filter(canceled_by_doc=False).order_by('date', 'start_time')
+        context = locals()
+        return render(request, template, context)
+
+    context = locals()
+    return render(request, template, context)
     
 @login_required()
 def logout(request):
