@@ -223,11 +223,10 @@ def doctorSetAvailability(request):
             appointments = Appointment.objects.filter(doctor=doctor)
             cancel_apps = []
             for a in appointments:
-                if a.start_time < doctor.start_hour or a.end_time > doctor.end_hour:
-                    print(a.id)
+                if a.start_time < datetime.strptime(availability_form["start_hour"].value(), '%H:%M:%S').time() \
+                        or a.end_time > datetime.strptime(availability_form["end_hour"].value(), '%H:%M:%S').time():
                     cancel_apps.append(a.id)
                 elif not (str(a.date.weekday()) in list(doctor.schedule)):
-                    print(a.id)
                     cancel_apps.append(a.id)
             return redirect('scheduleCancelAppointment', appointments=cancel_apps)
     template = 'doctorSetAvailability.html'
