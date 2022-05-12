@@ -224,8 +224,10 @@ def doctorSetAvailability(request):
             cancel_apps = []
             for a in appointments:
                 if a.start_time < doctor.start_hour or a.end_time > doctor.end_hour:
+                    print(a.id)
                     cancel_apps.append(a.id)
                 elif not (str(a.date.weekday()) in list(doctor.schedule)):
+                    print(a.id)
                     cancel_apps.append(a.id)
             return redirect('scheduleCancelAppointment', appointments=cancel_apps)
     template = 'doctorSetAvailability.html'
@@ -273,12 +275,15 @@ def cancelAppointment(request, appointmentId):
 def scheduleCancelAppointment(request, appointments):
     temp = appointments.replace('[', '').replace(']', '')
     apps = temp.split(',')
-    if len(apps) > 0:
-        for a in apps:
+    for a in apps:
+        try:
             appointment = Appointment.objects.get(id=int(a))
             appointment.is_canceled = True
             appointment.canceled_by_doc = True
             appointment.save()
+        finally:
+            apps = temp.split(',')
+
     patients = Patient.objects.all().filter(doctor=Doctor.objects.get(user=request.user))
     return render(request, 'doctorPage.html', {'user': request.user, 'patients': patients})
 
