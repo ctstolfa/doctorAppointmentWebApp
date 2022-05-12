@@ -148,7 +148,7 @@ def patientMakeAppointment(request):
             existing_check = len(Appointment.objects.all()
                                  .filter(date=app_date).filter(start_time=time)
                                  .filter(doctor=patient.doctor).filter(is_canceled=False)) == 0
-            time_check = patient.doctor.start_hour < time < patient.doctor.end_hour
+            time_check = patient.doctor.start_hour <= time < patient.doctor.end_hour
             day_check = str(app_date.weekday()) in list(patient.doctor.schedule)
             future_check = app_date > datetime.today().date()
             if existing_check and time_check and day_check and future_check:
