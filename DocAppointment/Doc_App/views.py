@@ -280,8 +280,8 @@ def scheduleCancelAppointment(request, appointments):
             appointment.is_canceled = True
             appointment.canceled_by_doc = True
             appointment.save()
-        finally:
-            apps = temp.split(',')
+        except ValueError:
+            apps = []
 
     patients = Patient.objects.all().filter(doctor=Doctor.objects.get(user=request.user))
     return render(request, 'doctorPage.html', {'user': request.user, 'patients': patients})
