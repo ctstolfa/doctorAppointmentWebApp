@@ -1,15 +1,8 @@
 import datetime
 
 from django.test import TestCase
-from ..models import Doctor
-from ..models import Patient
-from ..models import Appointment
+from ..models import Doctor, Patient, Appointment
 from django.contrib.auth.models import User
-from django.test import Client
-from django.urls import reverse
-
-
-# Create your tests here.
 
 
 class DoctorModelTests(TestCase):
