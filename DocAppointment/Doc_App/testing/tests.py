@@ -1,3 +1,5 @@
+import datetime
+
 from django.test import TestCase
 from ..models import Doctor
 from ..models import Patient
@@ -9,11 +11,16 @@ from django.urls import reverse
 
 
 class DoctorModelTests(TestCase):
-    def setUp(self):
-        self.doc1 = Doctor.objects.create(user="doctor1")
-        self.doc2 = Doctor.objects.create(user="doctor2")
-        self.patient1 = Patient.objects.create(doctor=Doctor.objects.filter(user="doctor1"), user="patient1")
-        self.patient2 = Patient.objects.create(doctor=Doctor.objects.filter(user="doctor2"), user="patient2")
+	def setUp(self):
+		self.user1 = User.objects.create_user(username='user1', password='TestingThisPassword1@')
+		self.doc1 = Doctor.objects.create(user=User.objects.get(id=1))
+
+	def test_doctor_creation(self):
+		self.assertEquals(self.doc1.user, self.user1)
+		self.assertEquals(self.doc1.start_hour, datetime.time(hour=0, minute=0, second=0, microsecond=0))
+		self.assertEquals(self.doc1.end_hour, datetime.time(hour=23, minute=0, second=0, microsecond=0))
+		self.assertEquals(self.doc1.schedule, '0')
+
 
 class PatientModelTests(TestCase):
     def setUp(self):
@@ -36,6 +43,7 @@ class PatientModelTests(TestCase):
         self.user5 = User.objects.create_user(username='user5', password='TestingThisPassword5@')
         self.patient5 = Patient.objects.create(doctor=Doctor.objects.get(id=1), user=User.objects.get(id=5))
         self.assertTrue(self.patient5 in list(Patient.objects.filter(doctor=self.doc3)))
+
 
 class AppointmentModelTests(TestCase):
     def setUp(self):
