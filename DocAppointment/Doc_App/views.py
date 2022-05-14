@@ -234,7 +234,7 @@ def doctorSetAvailability(request):
     return render(request, template, context)
 
 
-@login_required()
+@login_required() #both
 def cancelAppointment(request, appointmentId):
     appointment = Appointment.objects.get(id=appointmentId)
     appointment.is_canceled = True

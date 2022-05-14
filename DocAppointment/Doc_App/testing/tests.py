@@ -17,7 +17,7 @@ class DoctorModelTests(TestCase):
 		self.assertEquals(self.doc1.schedule, '0')
 
 
-class PatientModelTests(TestCase):
+class PatientModelTests(TestCase): #Lukas
 	def setUp(self):
 		self.user1 = User.objects.create_user(username='user1', password='TestingThisPassword1@')
 		self.user2 = User.objects.create_user(username='user2', password='TestingThisPassword2@')
